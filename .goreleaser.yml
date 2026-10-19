@@ -1,0 +1,54 @@
+version: 2
+project_name: khelm
+dist: ./build/dist
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id: khelm
+    main: ./cmd/khelm
+    targets:
+      - linux_amd64
+      - linux_arm64
+      - darwin_amd64
+      - darwin_arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -extldflags '-static' -X main.khelmVersion={{.Version}} -X main.helmVersion={{.Env.HELM_VERSION}}
+archives:
+  - formats: ['binary']
+    name_template: '{{.ProjectName}}-{{.Os}}-{{.Arch}}'
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  version_template: '{{ incpatch .Version }}-dev-{{.ShortCommit}}'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs(\([^)]+\))?:'
+      - '^test(\([^)]+\))?:'
+      - '^chore(\([^)]+\))?:'
+dockers_v2:
+  - images:
+      - docker.io/mgoltzsche/khelm
+      - ghcr.io/mgoltzsche/khelm
+    tags:
+      - latest
+      - "{{.Major}}"
+      - "{{.Version}}"
+    dockerfile: Dockerfile
+    ids:
+      - khelm
+    sbom: false
+    labels:
+      "org.opencontainers.image.description": "A Helm chart templating CLI, helm to kustomize converter, kpt function and kustomize plugin."
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.source": "{{.GitURL}}"
+    platforms:
+      - linux/amd64
+      - linux/arm64

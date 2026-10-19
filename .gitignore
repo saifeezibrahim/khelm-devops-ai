@@ -1,0 +1,12 @@
+/build
+
+/cmd/*/*
+!/cmd/*/*.go
+
+/example/**/charts
+/example/**/tmpcharts
+/example/kpt/*/output*
+/example/kpt/*/generated*
+/example/kpt/**/requirements.lock
+/example/**/generated-manifest-without-secrets.yaml
+dist/

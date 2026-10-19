@@ -1,0 +1,10 @@
+apiVersion: khelm.mgoltzsche.github.com/v2
+kind: ChartRenderer
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph-system
+repository: https://charts.rook.io/stable
+chart: rook-ceph
+version: 0.9.x
+valueFiles:
+  - values.yaml

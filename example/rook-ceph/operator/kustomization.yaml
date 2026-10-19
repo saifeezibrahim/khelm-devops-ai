@@ -1,0 +1,5 @@
+generators:
+  - generator.yaml
+
+resources:
+  - namespace.yaml

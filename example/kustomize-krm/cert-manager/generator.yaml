@@ -1,0 +1,16 @@
+# TODO: replace deprecated kpt fn config kind (and `data` field with `config`)
+apiVersion: khelm.mgoltzsche.github.com/v2
+kind: ChartRenderer
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+  annotations:
+    config.kubernetes.io/function: |
+        container:
+          image: mgoltzsche/khelm:latest
+          network: true
+data:
+  repository: https://charts.jetstack.io
+  chart: cert-manager
+  name: cert-manager
+  version: 1.1.0

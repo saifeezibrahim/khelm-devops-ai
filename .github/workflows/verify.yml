@@ -1,0 +1,57 @@
+name: Go & Image
+
+on:
+  # Trigger the workflow on push or pull request on master branch
+  pull_request:
+    branches:
+    - master
+    - v2
+    - v1
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Set up Go
+      uses: actions/setup-go@v7
+      with:
+        go-version: 1.27
+
+    - name: Build
+      run: make khelm
+
+    - name: Test
+      run: make test
+
+    - name: Lint
+      run: make check
+
+    - name: Container image
+      run: make image
+
+    - name: e2e test
+      run: make e2e-test
+
+    - name: Extract Helm version
+      id: extract_helm_version
+      run: |
+        HELM_VERSION="$(grep helm\.sh/helm/ go.mod | sed -E -e 's!helm\.sh/helm/v4|\s+|\+.*!!g; s!^v!!' | cut -d ' ' -f2 | grep -E .+)"
+        echo "helm_version=$HELM_VERSION" >> $GITHUB_OUTPUT
+
+    - name: Set up qemu
+      uses: docker/setup-qemu-action@v4
+      with:
+        platforms: all
+
+    - name: Dry-run release
+      run: make snapshot
+      env:
+        HELM_VERSION: ${{ steps.extract_helm_version.outputs.helm_version }}

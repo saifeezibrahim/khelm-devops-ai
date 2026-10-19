@@ -1,0 +1,8 @@
+apiVersion: khelm.mgoltzsche.github.com/v2
+kind: ChartRenderer
+metadata:
+  name: apiversions-condition
+  namespace: apiversions-condition-env
+chart: ./chart
+apiVersions:
+- myfancyapi/v1

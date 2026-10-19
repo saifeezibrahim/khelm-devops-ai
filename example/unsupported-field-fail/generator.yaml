@@ -1,0 +1,8 @@
+apiVersion: khelm.mgoltzsche.github.com/v2
+kind: ChartRenderer
+metadata:
+  name: mychart
+  namespace: myns
+chart: ../namespace
+unsupportedField: unsupported-value
+name: xyz
